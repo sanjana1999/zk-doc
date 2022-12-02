@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { encrypt } from "./logic/encrypt";
+import { encrypt, storeFile } from "./logic/encrypt";
 
 function App() {
 	const [publicKey, setPublicKey] = useState("");
