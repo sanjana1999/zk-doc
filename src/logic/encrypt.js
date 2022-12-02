@@ -1,5 +1,19 @@
-export function encrypt({publicKey, privateKey, fileDetails, textDetails}){
-            console.log(publicKey, privateKey, fileDetails, textDetails);
-
-
+export function encrypt({
+	publicKey,
+	privateKey,
+	fileDetails,
+	patientName,
+	age,
+	prescriptions,
+	diagnosis,
+}) {
+	console.log(
+		publicKey,
+		privateKey,
+		fileDetails,
+		patientName,
+		age,
+		prescriptions,
+		diagnosis
+	);
 }
