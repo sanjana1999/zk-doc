@@ -1,0 +1,13 @@
+{
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "*.js",
+      "options": {
+        "singleQuote": false,
+        "tabWidth": 4,
+        "useTabs": true
+      }
+    }
+  ]
+}
