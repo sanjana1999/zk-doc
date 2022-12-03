@@ -20,7 +20,7 @@ export async function storeFile({ file }) {
 	}
 }
 
-export async function retrieve(cid) {
+export async function retrieve({ cid }) {
 	console.log(cid);
 	const web3Client = makeStorageClient();
 	const res = await web3Client.get(cid);
@@ -29,10 +29,6 @@ export async function retrieve(cid) {
 		throw new Error(`failed to get ${cid}`);
 	}
 	const files = await res.files();
-	console.log(files);
-	if ((files || []).length > 0) {
-		decrypt({ files });
-	}
-
+	return files[0];
 	// request succeeded! do something with the response object here...
 }
