@@ -1,5 +1,5 @@
-import { Web3Storage } from "web3.storage";
-import { AES } from "crypto-js";
+import CryptoJS, { AES } from "crypto-js";
+import { storeFile } from "./ipfs";
 
 export function encrypt({
 	publicKey,
@@ -20,30 +20,66 @@ export function encrypt({
 		diagnosis
 	);
 
-	const encryptedText = AES.encrypt(
-		JSON.stringify(
-			fileDetails + patientName + age + prescriptions + diagnosis
-		),
-		privateKey
-	);
+	// const encryptedText = AES.encrypt(
+	// 	JSON.stringify(
+	// 		fileDetails + patientName + age + prescriptions + diagnosis
+	// 	),
+	// 	privateKey
+	// );
 
-	// storeFile({ file: e.target.files });
+	var file = fileDetails[0];
+	var reader = new FileReader();
 
-	return encryptedText;
+	reader.onload = async () => {
+		var key = "1234567887654321";
+		var wordArray = CryptoJS.lib.WordArray.create(reader.result); // Convert: ArrayBuffer -> WordArray
+		var encrypted = CryptoJS.AES.encrypt(wordArray, key).toString(); // Encryption: I: WordArray -> O: -> Base64 encoded string (OpenSSL-format)
+
+		var fileEnc = new Blob([encrypted]); // Create blob from string
+		console.log(new File(fileEnc, file.name));
+		// await storeFile({ file: fileEnc });
+	};
+	reader.readAsArrayBuffer(file);
 }
 
-export async function storeFile({ file }) {
-	const web3StorageAPIKey =
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDI4NTBFMTFEQUEzNmIwZTkwZkEzMTVFMDgwYjliRTk0QzUxOWM4MzciLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njk5OTg5OTM3MDUsIm5hbWUiOiJ6ay1kb2MifQ.GGxBL8zKjGD0ZBh-DMLiyf8ucq7YXPyC30gIhEJcltQ";
-
-	const web3Client = new Web3Storage({ token: web3StorageAPIKey });
-
-	console.log(file[0]);
-	try {
-		const cid = await web3Client.put(file);
-		console.log("stored files with cid:", cid);
-		return cid;
-	} catch (err) {
-		console.log(err);
+// storeFile({ file: e.target.files });
+function convertWordArrayToUint8Array(wordArray) {
+	var arrayOfWords = wordArray.hasOwnProperty("words") ? wordArray.words : [];
+	var length = wordArray.hasOwnProperty("sigBytes")
+		? wordArray.sigBytes
+		: arrayOfWords.length * 4;
+	var uInt8Array = new Uint8Array(length),
+		index = 0,
+		word,
+		i;
+	for (i = 0; i < length; i++) {
+		word = arrayOfWords[i];
+		uInt8Array[index++] = word >> 24;
+		uInt8Array[index++] = (word >> 16) & 0xff;
+		uInt8Array[index++] = (word >> 8) & 0xff;
+		uInt8Array[index++] = word & 0xff;
 	}
+	return uInt8Array;
+}
+
+export function decrypt({ files }) {
+	var file = files[0];
+	var reader = new FileReader();
+	reader.onload = () => {
+		var key = "1234567887654321";
+
+		var decrypted = CryptoJS.AES.decrypt(reader.result, key); // Decryption: I: Base64 encoded string (OpenSSL-format) -> O: WordArray
+		var typedArray = convertWordArrayToUint8Array(decrypted); // Convert: WordArray -> typed array
+
+		var fileDec = new Blob([typedArray]); // Create blob from typed array
+
+		var a = document.createElement("a");
+		var url = window.URL.createObjectURL(fileDec);
+		var filename = file.name.substr(0, file.name.length - 4) + ".pdf";
+		a.href = url;
+		a.download = filename;
+		a.click();
+		window.URL.revokeObjectURL(url);
+	};
+	reader.readAsText(file);
 }

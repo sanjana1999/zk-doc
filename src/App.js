@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { encrypt, storeFile } from "./logic/encrypt";
+import { decrypt, encrypt, storeFile } from "./logic/encrypt";
+import { retrieve } from "./logic/ipfs";
 
 function App() {
 	const [publicKey, setPublicKey] = useState("");
 	const [privateKey, setPrivateKey] = useState("");
-	const [fileDetails, setFileDetails] = useState("");
+	const [fileName, setFileName] = useState("");
+	const [fileDetails, setFileDetails] = useState({});
 	const [patientName, setPatientName] = useState("");
 	const [age, setAge] = useState("");
 	const [prescriptions, setPrescriptions] = useState("");
@@ -38,8 +40,11 @@ function App() {
 				<p>File</p>
 				<input
 					type="file"
-					value={fileDetails}
-					onChange={(e) => setFileDetails(e.target.value)}
+					onChange={(e) => {
+						// encrypt({ fileDetails: e.target.files });
+						// decrypt({ files: e.target.files });
+						setFileDetails(e.target.files);
+					}}
 				/>
 			</div>
 			{/* name, , age, prescriptions, diagnosis */}
@@ -87,6 +92,15 @@ function App() {
 				}}
 			>
 				Submit
+			</button>
+			<button
+				onClick={() => {
+					retrieve(
+						"bafybeielxbhcuymuzq5sjrqzpkvcpk5xczdivssk2voyceoiqlj34umxci"
+					);
+				}}
+			>
+				Retrieve
 			</button>
 		</div>
 	);
