@@ -6,11 +6,19 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.2.0",
+    "crypto": "^1.0.1",
+    "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.1.1",
+    "dotenv": "^10.0.0",
+    "ethers": "^5.7.2",
+    "nanoid": "^3.3.4",
+    "os": "^0.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.4",
     "react-scripts": "5.0.1",
+    "twilio": "^3.83.4",
     "web-vitals": "^2.1.4",
     "web3.storage": "^4.4.0"
   },
@@ -37,5 +45,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "browser": {
+    "crypto": false
   }
 }

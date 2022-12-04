@@ -1,25 +1,35 @@
 import { MEDICAL_RECORDS_CONTRACT_ADDRESS } from './config';
-import { abi, data } from './recordABI.json';
+import CONTRACT_ABI from './recordABI.json';
+import { ethers } from 'ethers';
+// import crypto from 'crypto-js'
 
-var ethers = require('ethers');  
-var crypto = require('crypto');
+var userAddress;
 
+function genHexString(len) {
+    const hex = '0123456789ABCDEF';
+    let output = '';
+    for (let i = 0; i < len; ++i) {
+        output += hex.charAt(Math.floor(Math.random() * hex.length));
+    }
+    return output;
+}
 
 function createWallet() {
-    var id = crypto.randomBytes(32).toString('hex');
-    var privateKey = "0x"+id;
+    const id = genHexString(64);
+    const privateKey = "0x"+id;
 
-    var wallet = new ethers.Wallet(privateKey);
+    console.log(privateKey);
+
+    const wallet = new ethers.Wallet(privateKey);
     console.log("Address: " + wallet.address);
 
-    return {
-        privateKey,
-        wallet
-    }
+    userAddress = wallet.address;
+
+    return wallet
 }
 
 // Get Patients Records
-async function getPatientRecords(wallet){
+async function getPatientRecords(address){
     try {
         const { ethereum } = window;
   
@@ -29,11 +39,10 @@ async function getPatientRecords(wallet){
 
             const recordContract = new ethers.Contract(
                 MEDICAL_RECORDS_CONTRACT_ADDRESS,
-                abi,
+                CONTRACT_ABI.abi,
                 signer
             );
-            
-            const result = await recordContract.getRecordsOfPatient(wallet.address);
+            const result = await recordContract.getRecordsOfPatient(address);
             console.log(result);
             return result;
         }
@@ -51,13 +60,18 @@ async function uploadDocuments({ patientAddress, name, age, prescription, diagno
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
 
+            console.log("Before Record Contract")
+
             const recordContract = new ethers.Contract(
                 MEDICAL_RECORDS_CONTRACT_ADDRESS,
-                abi,
+                CONTRACT_ABI.abi,
                 signer
             );
+
+            console.log("After Record Contract");
             
-            let transaction = await recordContract.publishRecord(patientAddress, name, age, prescription, diagnosis, data);
+            console.log(userAddress, name, age, prescription, diagnosis, data);
+            let transaction = await recordContract.publishRecord(userAddress, name, age, prescription, diagnosis, data);
             let tx = await transaction.wait();
             console.log("Documents uploaded Successfully");
         }
@@ -69,5 +83,6 @@ async function uploadDocuments({ patientAddress, name, age, prescription, diagno
 export {
     createWallet,
     getPatientRecords,
-    uploadDocuments
+    uploadDocuments,
+    userAddress
 };
