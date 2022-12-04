@@ -30,7 +30,7 @@ function Dashboard() {
             marginBottom: '0.3em',
           }}
         >
-          Consult, Share,<br></br>Documents<br></br>with trust.
+          Consult, Share,<br></br>Document<br></br>with trust.
         </Title>
         <Title
           level={4}
@@ -41,8 +41,8 @@ function Dashboard() {
             margin: '1em 0',
           }}
         >
-          Access your entire medical history with your phone number.<br></br>
-          Access your entire medical history with number.
+          Access your entire medical history with your phone number<br></br>
+          and have ownership of your records.
         </Title>
         <Button
           type="primary"

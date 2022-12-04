@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# zkDoc
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Access all your medical records by just your Phone Number.  
+An elegant solution to healthcare and hospital backend systems which brings in
+Access, Security & Ease to ALL patients.  
+We don't even need a wallet address to make an account, just your phone number!  
+All Content Identifiers of All files are obviously encrypted!  
+Your entire patient history, accessible to you, whenever you login.  
+By making every visit to the Doc an NFT, we can establish clear ownership.
 
-## Available Scripts
+## Authors
 
-In the project directory, you can run:
+- [@Richa Tiwari](https://www.github.com/richatiwari9)
+- [@Rishikesh Panda](https://www.github.com/redrodeo03)
+- [@Gaurang Gupta](https://www.github.com/Prat-The-Brat)
+- [@Pratham Bhonge](https://www.github.com/gaurang2200)
+- [@Sanjana Kumari](https://www.github.com/sanjana1999)
 
-### `npm start`
+<!-- blank line -->
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/watch?v=8rzxw4vCtqY" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
+<!-- blank line -->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Usage of web.storage (IPFS/Filecoin bounty)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```javascript
+export async function storeFile({ file }) {
+  console.log(file[0]);
+  try {
+    const web3Client = makeStorageClient();
+    const cid = await web3Client.put(file);
+    console.log('stored files with cid:', cid);
+    return cid;
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
 
-### `npm test`
+```javascript
+export async function retrieve({ cid }) {
+	console.log(cid);
+	const web3Client = makeStorageClient();
+	const res = await web3Client.get(cid);
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+	if (!res.ok) {
+		throw new Error(`failed to get ${cid}`);
+	}
+	const files = await res.files();
+	return files[0];
+	// request succeeded!
+```
 
-### `npm run build`
+## Polygon Testnet
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Contract Address: 0x2e0dfe3d3b06113b1349497e3a8151c88c560ab2
