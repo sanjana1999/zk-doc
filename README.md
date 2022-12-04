@@ -16,11 +16,9 @@ By making every visit to the Doc an NFT, we can establish clear ownership.
 - [@Pratham Bhonge](https://www.github.com/gaurang2200)
 - [@Sanjana Kumari](https://www.github.com/sanjana1999)
 
-<!-- blank line -->
 <figure class="video_container">
   <iframe src="https://www.youtube.com/watch?v=8rzxw4vCtqY" frameborder="0" allowfullscreen="true"> </iframe>
 </figure>
-<!-- blank line -->
 
 ## Usage of web.storage (IPFS/Filecoin bounty)
 
