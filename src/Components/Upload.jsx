@@ -12,7 +12,7 @@ import { storeFile, retrieve } from '../utils/ipfs';
 import axios from 'axios';
 import { AppContext } from '../contexts/AppContext';
 
-function UploadDetails() {
+function UploadDetails({ setList }) {
   const [isLoading, setIsLoading] = useState(false);
   const [privateKey, setPrivateKey] = useState('');
   const [fileDetails, setFileDetails] = useState({});
@@ -69,12 +69,20 @@ function UploadDetails() {
     setIsLoading(false);
     console.log('Upload handle Submit:', wallet.address);
     setShowUploadModal((prev) => !prev)
+
+    const records = await getPatientRecords(wallet.address);
+    const record = records[0];
+    
+    setList((prev) => 
+      [...prev, {
+        "name": "Sanjana",
+        "age": "22",
+        "diagnosis": "Panic Attacks"
+      }]
+    )
+
   };
 
-  const handleRetrieve = async () => {
-    const records = await getPatientRecords(wallet.address);
-    // console.log(decrypt(records[0], wallet.address))
-  };
 
   const decryptAndRetrieve = async ({ encryptedDetails, privateKey }) => {
     console.log('decryptAndRetrieve', encryptedDetails, privateKey);

@@ -79,6 +79,6 @@ export async function decrypt({ encryptedDetails, privateKey }) {
 		encryptedDiagnosis,
 		privateKey
 	).toString(CryptoJS.enc.Utf8);
-
+	console.log(cid, name, age, prescription, diagnosis);
 	return { cid, name, age, prescription, diagnosis };
 }
