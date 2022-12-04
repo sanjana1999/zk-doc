@@ -16,15 +16,18 @@ function usePrevious(value) {
   return ref.current;
 }
 function Login({ showLogin }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [otp, setOTP] = useState(null);
+  const [isOpen, setIsOpen] = useState(showLogin);
   const [docAddress, setDocAddress] = useState(null);
 
   const [otpRes, setOtpRes] = useState();
   const { wallet, setWallet, phone, setPhone } = useContext(AppContext);
-  const prevShowLogin = usePrevious(showLogin);
+  const prevIsOpen = usePrevious(isOpen);
   const { Title } = Typography;
 
   const [form] = Form.useForm();
+  const [otpState, setOtpState] = useState(0);
 
   const accountSid = process.env.ACCOUNT_SID;
   const authToken = process.env.AUTH_TOKEN;
@@ -33,7 +36,7 @@ function Login({ showLogin }) {
 
   const getOtpVerification = async () => {
     let response = await fetch(
-      'http://localhost:18781/utils/send-notification',
+      'http://localhost:3000/utils/send-notification',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,15 +49,14 @@ function Login({ showLogin }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
     // console.log("Twilio Notification Sent: ", response);
     const data = {
       to: '+91' + phone,
       code: otp,
     };
 
-    const response = await fetch('http://localhost:18781/utils/verify-otp', {
+    setIsLoading(true);
+    const response = await fetch('http://localhost:3000/utils/verify-otp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +80,7 @@ function Login({ showLogin }) {
 
       console.log('User Added Successfully', res);
       // }
-
+      setIsLoading(false);
       navigate('/upload');
     }
     // window.param
@@ -87,9 +89,16 @@ function Login({ showLogin }) {
 
   useEffect(() => {});
 
-  const onFinish = (values) => {
-    console.log('Success:', values);
-    navigate('/list');
+  const onFinish = async(values) => {
+    if(otpState == 0){
+      setOtpState(1);
+      await getOtpVerification();
+    } else if(otpState == 1) {
+      await handleSubmit();
+      console.log('Success:', values);
+      setIsOpen(false);
+      navigate('/list');
+    }
   };
 
   {
@@ -98,17 +107,18 @@ function Login({ showLogin }) {
       <button onClick={handleSubmit}>Login</button>
       <button onClick={() => getOtpVerification()}>Get OTP</button> */
   }
-
+  console.log(prevIsOpen !== isOpen && prevIsOpen !== showLogin && isOpen
+    ? 'open'
+    : prevIsOpen !== isOpen &&
+      prevIsOpen !== isOpen &&
+      !isOpen
+    ? 'close'
+    : '', prevIsOpen, isOpen, showLogin);
   return (
     <div
       className={`slide-up ${
-        prevShowLogin !== undefined && prevShowLogin !== showLogin && showLogin
-          ? 'open'
-          : prevShowLogin !== undefined &&
-            prevShowLogin !== showLogin &&
-            !showLogin
-          ? 'close'
-          : ''
+        (otpState === 0 || otpState === 1) 
+        && showLogin? 'open': 'close'
       }`}
     >
       <div style={{ padding: '27% 80px' }}>
@@ -128,7 +138,8 @@ function Login({ showLogin }) {
           layout="vertical"
           style={{ paddingTop: '30px' }}
           onFinish={onFinish}
-        >
+        >{
+            otpState === 0?
           <Form.Item name="phone">
             <Input
               style={{
@@ -139,6 +150,8 @@ function Login({ showLogin }) {
               placeholder="Phone number"
             />
           </Form.Item>
+            :null}{
+            otpState === 1?
           <Form.Item name="password">
             <Input
               style={{
@@ -148,7 +161,7 @@ function Login({ showLogin }) {
               }}
               placeholder="OTP"
             />
-          </Form.Item>
+          </Form.Item>: null}
           <Form.Item>
             <Button
               type="primary"
@@ -161,6 +174,7 @@ function Login({ showLogin }) {
                 width: '100%',
                 fontSize: '20px',
               }}
+              loading={isLoading}
             >
               Submit
             </Button>

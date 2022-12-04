@@ -1,8 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Card from './Card';
 import Upload from './Upload';
 
 function List() {
+  const [list, setList] = useState(
+    [{"name":"Sanjana", "age":"19", "diagnosis":"Insomania"}, 
+    {"name":"Sanjana", "age":"20", "diagnosis":"Acute Chronic Disorder"},
+    {"name":"Sanjana", "age":"22", "diagnosis":"Goitre"},
+    {"name":"Sanjana", "age":"22", "diagnosis":"Bow Legs"}]
+  );
+
   return (
     <div
       style={{
@@ -14,7 +21,7 @@ function List() {
       }}
     >
       <div>
-        <Upload />
+        <Upload setList={setList} />
       </div>
       <div
         style={{
@@ -34,9 +41,11 @@ function List() {
           <div className="heading">Details</div>
           <div className="heading">PDF</div>
         </div>
-        {[1, 2, 3, 4, 5].map((_, i) => (
+        {list.map((card, i) => (
           <div key={`card-${i}`}>
-            <Card />
+            <Card 
+              card={card}
+            />
           </div>
         ))}
       </div>

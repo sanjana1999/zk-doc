@@ -13,6 +13,7 @@ import axios from 'axios';
 import { AppContext } from '../contexts/AppContext';
 
 function UploadDetails() {
+  const [isLoading, setIsLoading] = useState(false);
   const [privateKey, setPrivateKey] = useState('');
   const [fileDetails, setFileDetails] = useState({});
   const [patientName, setPatientName] = useState('');
@@ -47,6 +48,7 @@ function UploadDetails() {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const encryptedDetails = await uploadAndEncrypt({
       privateKey,
       fileDetails,
@@ -64,8 +66,9 @@ function UploadDetails() {
       diagnosis: encryptedDetails.encryptedDiagnosis,
       data: encryptedDetails.encryptedCid,
     });
-
+    setIsLoading(false);
     console.log('Upload handle Submit:', wallet.address);
+    setShowUploadModal((prev) => !prev)
   };
 
   const handleRetrieve = async () => {
@@ -121,8 +124,8 @@ function UploadDetails() {
           <Button
             key="submit"
             type="primary"
-            // loading={loading}
-            // onClick={en}
+            loading={isLoading}
+            onClick={handleSubmit}
             style={{
               backgroundColor: 'rgb(0 32 70)',
               color: '#f9f5eb',

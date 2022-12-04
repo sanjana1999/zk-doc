@@ -1,12 +1,12 @@
 import React from 'react';
 import { FileTextOutlined } from '@ant-design/icons';
 
-function Card() {
+function Card({card}) {
   return (
     <div className="card">
       <div>
-        <div className="heading">Sanjana Kumari(24 yrs)</div>
-        <div>Insomnia</div>
+        <div className="heading">{card.name} ({card.age} yrs)</div>
+        <div>{card.diagnosis}</div>
       </div>
       <div style={{ cursor: 'pointer' }}>
         <FileTextOutlined />
