@@ -1,5 +1,4 @@
 import { Web3Storage } from "web3.storage";
-import { decrypt } from "./encrypt";
 
 function makeStorageClient() {
 	const web3StorageAPIKey =
